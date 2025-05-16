@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Escanear cambios automáticamente -->
+    <configurationScan />
+
+    <!-- Definir una variable para el nombre del perfil -->
+    <springProperty name="springProfile" source="spring.profiles.active" />
+
+    <!-- Appender para consola -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender para archivo (usado solo en prod) -->
+    <appender name="FileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Perfil: dev -->
+    <springProfile name="dev">
+        <logger name="org.springframework" level="INFO"/>
+        <root level="DEBUG">
+            <appender-ref ref="Console"/>
+        </root>
+    </springProfile>
+
+    <!-- Perfil: test -->
+    <springProfile name="test">
+        <logger name="org.springframework" level="INFO"/>
+        <root level="DEBUG">
+            <appender-ref ref="Console"/>
+        </root>
+    </springProfile>
+
+    <!-- Perfil: prod -->
+    <springProfile name="prod">
+        <logger name="org.springframework" level="WARN"/>
+        <root level="WARN">
+            <appender-ref ref="FileAppender"/>
+        </root>
+    </springProfile>
+
+</configuration>
